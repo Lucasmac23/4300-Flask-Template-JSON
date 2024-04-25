@@ -72,12 +72,14 @@ body {
 }
 
 .industryTitle {
-    font-size: 35px;
-    font-weight: 100;
+    font-size: 27px;
+    font-weight: 700;
     border-bottom: solid 0.5px #ffffff78;
     color: white;
     display: flex;
+    flex-direction: column;
     margin-bottom: 10px;
+    padding-bottom: 12px;
     font-family: sans-serif;
     justify-content: space-between;
     align-items: center;
@@ -387,6 +389,19 @@ h4 {
     height: 100%;
     background: #80808054;
     border-radius: 30px;
+}
+
+.input-box textarea {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100%;
+    overflow: scroll;
+    letter-spacing: normal;
+    margin-left: 10px;
+    font-family: 'Inter';
+    font-size: 16px;
+    border: none;
+    outline: 0;
 }
 
 .input-box input {

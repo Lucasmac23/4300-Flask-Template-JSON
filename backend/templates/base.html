@@ -19,13 +19,9 @@
                 <form class="input_form_container">
                     <div class="input_form">
                         <div class="lhs form_column">
-                            <!-- <div class="input-box jobTitle fadeIn" >
-                            <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                            <input placeholder="Enter Job Title" id="jobTitle" >
-                        </div> -->
                             <div class="input-box jobDescription description fadeIn" id="personalValues_inputBox">
                                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                                <input placeholder="Enter Career/Personal Values" id="personalValues">
+                                <textarea placeholder="Enter Career/Personal Values" id="personalValues"></textarea>
                             </div>
 
 
@@ -34,50 +30,11 @@
 
                             <div class="input-box companyDescription description fadeIn" id="personalSkills_inputBox">
                                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                                <input placeholder="Enter Personal Skills/Experience" id="personalSkills">
+                                <textarea placeholder="Enter Personal Skills/Experience" id="personalSkills"></textarea>
                             </div>
-
-
-
-                            <!-- <div class="citySelectContainer fadeIn">
-                            <div>
-                                <h4>Please Choose a City</h4>
-                            </div>
-                        
-                            <fieldset class="citySelect ">
-                                <label>
-                                Cities
-                                </label>
-                                <select id="myCity" name="myCity">
-                                    <option value="None">Select a City</option>
-                                    <option value="PHI">Philadelphia, PA</option>
-                                    <option value="NYC">New York, PA</option>
-                                    <option value="TMP">Tampa, FL</option>
-                                    <option value="HAR">Hartford, CT</option>
-                                    
-                                </select>
-                            </fieldset>
-                        </div> -->
-                            <!-- 
-                        <div class="input-box experienceAndSkills description fadeIn" >
-                            <input placeholder="Experience and Skills" id="userExperienceAndSkills" >
-                        </div> -->
-
 
                         </div>
                     </div>
-
-
-
-                    <!-- <div id="map"></div> -->
-                    <!-- <div class="salaryRangeContainer fadeIn">
-                            <h4>What is your ideal salary?</h4>
-                            <div class="input-box payRange ">
-                                <input class="slider" value="250000" id="salaryRange" oninput="this.nextElementSibling.value = `${'$'+this.value}`" min="10000" max="1000000" type="range" id="filter-text-val" >
-                                <output>$250000</output>
-    
-                            </div>
-                </div> -->
 
                 </form>
                 <div class="examplesContainer fadeIn">
@@ -181,12 +138,11 @@
             // <div class="simScore">Similarity Score: ${svdResult[4]}</div>
 
             industry_company_scores_grouping.forEach((grouping, indx) => {
-                console.log("HERE IS GROUPING", grouping)
                 let col = `var(--col_${industryColorsShuffled[indx % 4]})`;
                 let industry = grouping[0]
                 let weighted_score = grouping[1]
                 let companies = grouping[2]
-                console.log(industry, weighted_score, companies)
+                // console.log(industry, weighted_score, companies)
                 prevColor = col;
                 industryColors.push({ industry: industry, industryNum: industry_company_scores_grouping.length + 1, color: col })
 
@@ -198,70 +154,73 @@
 
                 containerDiv.style = '--color:' + col
                 document.getElementById("answer-box").appendChild(containerDiv)
+                if (companies.length != 0) {
 
-                //Generating the industry title section
-                let industryTitleContainer = document.createElement("div")
-                industryTitleContainer.classList.add('industryTitle')
-                industryTitleContainer.innerHTML = '<div class="industryPathTitle">Matched Industry Path: </div>' + industry
-                document.getElementById(industry).appendChild(industryTitleContainer)
 
-                for (let company of companies) {
-                    let company_industry = industry;
-                    // top_companies is of type (company, description, simScore)[]
-                    let companyName = company[0]
-                    let company_description = company[1]
-                    let company_sim_score = company[2]
-                    let tempDiv = document.createElement("div")
-                    tempDiv.classList.add('fadeIn')
-                    tempDiv.classList.add('indvRsltContainer')
-                    // console.log("MATCH!", companyName)
-                    tempDiv.innerHTML = answerBoxTemplate(companyName, company_industry, company_description)
-                    document.getElementById(company_industry).appendChild(tempDiv)
+                    //Generating the industry title section
+                    let industryTitleContainer = document.createElement("div")
+                    industryTitleContainer.classList.add('industryTitle')
+                    industryTitleContainer.innerHTML = '<div class="industryPathTitle">Matched Industry Path: </div>' + industry
+                    document.getElementById(industry).appendChild(industryTitleContainer)
 
-                }
+                    for (let company of companies) {
+                        let company_industry = industry;
+                        // top_companies is of type (company, description, simScore)[]
+                        let companyName = company[0]
+                        let company_description = company[1]
+                        let company_sim_score = company[2]
+                        let tempDiv = document.createElement("div")
+                        tempDiv.classList.add('fadeIn')
+                        tempDiv.classList.add('indvRsltContainer')
+                        // console.log("MATCH!", companyName)
+                        tempDiv.innerHTML = answerBoxTemplate(companyName, company_industry, company_description)
+                        document.getElementById(company_industry).appendChild(tempDiv)
 
-                // display 3 reviews per industry
-                let industryReviewsDiv = document.createElement("div");
-                industryReviewsDiv.classList.add('reviews');
-                industryReviewsDiv.classList.add('fadeIn')
+                    }
 
-                industryReviewsDiv.innerHTML = `<h3 class="industry_reviews_header">Industry Reviews</h3>`;
+                    // display 3 reviews per industry
+                    let industryReviewsDiv = document.createElement("div");
+                    industryReviewsDiv.classList.add('reviews');
+                    industryReviewsDiv.classList.add('fadeIn')
 
-                let reviews = industry_reviews[industry];
-                console.log(reviews);
-                if (reviews && reviews.length > 0) {
-                    reviews.forEach(review => {
-                        let reviewDiv = document.createElement("div");
-                        reviewDiv.classList.add('review');
-                        let companyName = review[0];
-                        let reviewHeadlines = review[1].split(/, (?=[A-Z])/);
+                    industryReviewsDiv.innerHTML = `<h3 class="industry_reviews_header">Industry Reviews</h3>`;
 
-                        let reviewHtml = `<p class="companyTitle"><strong>${companyName}:</strong></p>`;
+                    let reviews = industry_reviews[industry];
+                    // console.log(reviews);
+                    if (reviews && reviews.length > 0) {
+                        reviews.forEach(review => {
+                            let reviewDiv = document.createElement("div");
+                            reviewDiv.classList.add('review');
+                            let companyName = review[0];
+                            let reviewHeadlines = review[1].split(/, (?=[A-Z])/);
 
-                        reviewHeadlines.forEach(headline => {
-                            reviewHtml += `<li class="reviewLine">${headline}</li>`;
+                            let reviewHtml = `<p class="companyTitle"><strong>${companyName}:</strong></p>`;
+
+                            reviewHeadlines.forEach(headline => {
+                                reviewHtml += `<li class="reviewLine">${headline}</li>`;
+                            });
+
+                            reviewDiv.innerHTML = reviewHtml;
+
+                            industryReviewsDiv.appendChild(reviewDiv);
                         });
+                    } else {
+                        let noReviewsDiv = document.createElement("div");
+                        industryReviewsDiv.classList.add('noReviews')
+                        noReviewsDiv.classList.add('no-reviews');
+                        noReviewsDiv.innerHTML = `<p>No reviews available for this industry.</p>`;
+                        industryReviewsDiv.appendChild(noReviewsDiv);
+                    }
+                    containerDiv.appendChild(industryReviewsDiv);
 
-                        reviewDiv.innerHTML = reviewHtml;
-
-                        industryReviewsDiv.appendChild(reviewDiv);
-                    });
-                } else {
-                    let noReviewsDiv = document.createElement("div");
-                    industryReviewsDiv.classList.add('noReviews')
-                    noReviewsDiv.classList.add('no-reviews');
-                    noReviewsDiv.innerHTML = `<p>No reviews available for this industry.</p>`;
-                    industryReviewsDiv.appendChild(noReviewsDiv);
+                    if (!data || data.length == 0) {
+                        let tempDiv = document.createElement("div")
+                        tempDiv.innerHTML = 'No Results Found'
+                        document.getElementById("answer-box").appendChild(tempDiv)
+                    }
+                    document.getElementById("answer-box").scrollIntoView({ behavior: "smooth" })
+                    document.getElementById('searchButton').innerHTML = 'Search'
                 }
-                containerDiv.appendChild(industryReviewsDiv);
-
-                if (!data || data.length == 0) {
-                    let tempDiv = document.createElement("div")
-                    tempDiv.innerHTML = 'No Results Found'
-                    document.getElementById("answer-box").appendChild(tempDiv)
-                }
-                document.getElementById("answer-box").scrollIntoView({ behavior: "smooth" })
-                document.getElementById('searchButton').innerHTML = 'Search'
             })
 
         }
