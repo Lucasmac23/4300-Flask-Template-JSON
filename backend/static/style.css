@@ -11,14 +11,47 @@ body {
     --col_4: var(--light-red);
 }
 
+.minimized .indvRsltContainer {
+    height: 0px;
+    transition: all 0.2s ease;
+}
+
+.minimized .reviews {
+    height: 0px;
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
 .indvRsltContainer {
     cursor: pointer;
+    height: fit-content;
     transition: all 0.2s ease
 }
 
+.caretContainer {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    fill: #ffffffb8;
+    --size: 25px;
+}
+
+.caretContainer svg {
+    height: var(--size);
+    width: var(--size);
+}
+
+.minimized .answer_resp {
+    height: 0px;
+    padding: 0px !important;
+}
+
 .answer_resp {
+    overflow: hidden;
+    height: fit-content;
+    max-height: 250px;
     transform: scale(1);
-    transition: all 0.2s ease
+    transition: all 0.2s ease;
 }
 
 .indvRsltContainer:hover .answer_resp {
@@ -82,7 +115,10 @@ body {
     padding-bottom: 12px;
     font-family: sans-serif;
     justify-content: space-between;
+    /* max-width: 90%; */
     align-items: center;
+    padding-inline: 20px;
+    text-align: center;
 }
 
 .full-body-container {
@@ -485,8 +521,13 @@ h4 {
 
 .episode-title {
     font-family: 'Kanit', sans-serif;
+    height: 25px;
+    margin-bottom: 0px;
+    margin-top: 10px;
 }
 
 .episode-desc {
     font-family: 'Montserrat', sans-serif;
+    max-height: calc(250px - 65px - 2em);
+    overflow: scroll;
 }
