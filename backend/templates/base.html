@@ -8,7 +8,7 @@
 
 <body>
     <div class="full-body-container">
-        <div class="main_display_container">
+        <div class="main_display_container" id="main_display_container">
             <div class="pathFinderTitle">
                 <img src="{{ url_for('static', filename='images/PathFinderLogo.png') }}" />
                 <div class="subtitleText">
@@ -23,8 +23,6 @@
                                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
                                 <textarea placeholder="Enter Career/Personal Values" id="personalValues"></textarea>
                             </div>
-
-
                         </div>
                         <div class="rhs form_column">
 
@@ -33,9 +31,21 @@
                                 <textarea placeholder="Enter Personal Skills/Experience" id="personalSkills"></textarea>
                             </div>
 
+
                         </div>
                     </div>
+                    <div class="rangeInputSliderContainer fadeIn">
+                        <input type="range" class="rangeInputSlider skills" id="queryWeightingSlider">
+                        <div class="sliderDescrips">
+                            <div class="left">
+                                all values
+                            </div>
+                            <div class="right">
+                                all skills
+                            </div>
+                        </div>
 
+                    </div>
                 </form>
                 <div class="examplesContainer fadeIn">
                     <div class="example one fadeIn">
@@ -59,17 +69,24 @@
     </div>
     <script>
         formFieldValues = {}
+        let querySearchMinHeight = '0px'
+        document.addEventListener('DOMContentLoaded', () => {
+            let container = document.getElementById('main_display_container')
+            querySearchMinHeight = container.clientHeight + 'px'
+            container.style.minHeight = querySearchMinHeight
+        });
 
         // Function to check if all fields are filled. Also updates the form field values
         function checkAndPopulateFields() {
             let personalValues = document.getElementById("personalValues").value.trim();
             let personalSkills = document.getElementById("personalSkills").value.trim();
-
-
+            let weighting = Number(document.getElementById('queryWeightingSlider').value)
+            console.log("HERE IS WEIGHTING", weighting)
             // Populate formFieldValues object with field values
             formFieldValues.personalValues = personalValues;
             formFieldValues.personalSkills = personalSkills;
-
+            formFieldValues.personalValuesWeighting = 1 - weighting / 100
+            formFieldValues.personalSkillsWeighting = weighting / 100
             // Check if any field is empty
             if (personalValues === "" || personalSkills === "") {
                 return false;
@@ -229,7 +246,7 @@
             try {
                 document.getElementById("answer-box").innerHTML = ""
                 document.getElementById('searchButton').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="loadingSpinner"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>`
-                fetch("/searchPaths?" + new URLSearchParams({ personalSkills: formFieldValues.personalSkills, personalValues: formFieldValues.personalValues }).toString())
+                fetch("/searchPaths?" + new URLSearchParams({ personalSkills: formFieldValues.personalSkills, personalValues: formFieldValues.personalValues, personalValuesWeighting: formFieldValues.personalValuesWeighting, personalSkillsWeighting: formFieldValues.personalSkillsWeighting }).toString())
                     .then((response) => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');

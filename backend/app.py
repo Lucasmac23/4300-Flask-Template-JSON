@@ -47,7 +47,7 @@ merged_df = pd.read_json('linkedin_glassdoor_job_id.json', orient ='split', comp
 
 app = Flask(__name__)
 CORS(app)
-def executeQuerySearch(personalValues_query, personalExperience_query, num_return_industries=5, num_return_companies_per_industry=3):
+def executeQuerySearch(personalValues_query, personalExperience_query, personalValuesWeighting, personalSkillsWeighting, num_return_industries=5, num_return_companies_per_industry=3, ):
     try:
     
 
@@ -99,59 +99,6 @@ def executeQuerySearch(personalValues_query, personalExperience_query, num_retur
 
         # create df with token fields for each element in fields list
         tokenized_df = tokenize_df_fields(merged_df, fields, tokenize)
-
-
-        def build_inverted_index(df: pd.DataFrame, token_column_name: str) -> dict:
-            """
-            Parameters
-            ----------
-            df: pd.DataFrame
-                The input df that includes the tokenized fields.
-
-            token_column_name: str
-                The name of the tokenized column
-
-            Returns
-            -------
-            inverted_index: dict
-                An inverted index.
-                Keys are the tokens.
-                Values of inverted_index are a sorted list of tuples. First value in tuple is
-                the original job_id (not df index). Second value in tuple is count of term in field.
-            """
-
-            inverted_index = {}
-
-            job_ids = df.job_id.to_numpy()
-            tokens_list = df[token_column_name].tolist()
-
-            tokens_dict = dict(zip(job_ids, tokens_list))
-
-            # for each job:
-            for job_id, tokens in tokens_dict.items():
-                token_counts = {}
-
-                # iterate through the tokens and get counts
-                for token in tokens:
-                    if token in token_counts:
-                        token_counts[token] += 1
-                    else:
-                        token_counts[token] = 1
-
-                # iterate through the token count dictionary
-                for token, count in token_counts.items():
-                    if token in inverted_index:
-                        inverted_index[token].append((job_id, count))
-                    else:
-                        inverted_index[token] = [(job_id, count)]
-
-            # sort list
-            for token, job_dict in inverted_index.items():
-                inverted_index[token] = sorted(job_dict, key=lambda x: x[1], reverse=True)
-
-            return inverted_index
-
-    
         # Returns top n matches for query in the form (company, industry, description, simScore)[] or (industry, simScore)[]
         # Based on the col_title provided
         def SVD_search_jobs(query, col_title, name_col, n = 3, k=50):
@@ -214,16 +161,13 @@ def executeQuerySearch(personalValues_query, personalExperience_query, num_retur
 
         
            # print("COMPUTE IDF")
-        industry_results = SVD_search_jobs(personalExperience_query, 'job_industry_tokens', 'job_industry', 3000)
+        industry_results = SVD_search_jobs(personalValues_query, 'job_industry_tokens', 'job_industry', 3000)
         industry_results = list(set(industry_results))
 
 
-        company_results = SVD_search_jobs(personalValues_query, 'company_description',  'company_name', 1000)
+        company_results = SVD_search_jobs(personalExperience_query, 'company_description',  'company_name', 1000)
         company_results = list(set(company_results))
-       
-        # print("industry Results", industry_results)
-        # print('\n')
-        # print('company results', company_results)
+
 
         # Idea now is we have scores for industry and company.
         # We want to find the maximum overlap of the two. We can group companies into industry categories
@@ -242,8 +186,8 @@ def executeQuerySearch(personalValues_query, personalExperience_query, num_retur
         # companies_grouped_by_industry_results = dict(companies_grouped_by_industry_results)
 
         combinedScores = []
-        company_weight = 1
-        industry_weight = 1
+        company_weight = personalValuesWeighting
+        industry_weight = personalSkillsWeighting
         # Print the grouped results
         for  industry, industry_simScore in industry_results:
             companies = companies_grouped_by_industry_results.get(industry)
@@ -305,9 +249,9 @@ def executeQuerySearch(personalValues_query, personalExperience_query, num_retur
 
 
 # Sample search using json with pandas
-def json_search(personalValues, personalSkills):
+def json_search(personalValues, personalSkills, personalValuesWeighting, personalSkillsWeighting):
     try:
-        rslts = executeQuerySearch(personalValues, personalSkills)
+        rslts = executeQuerySearch(personalValues, personalSkills,personalValuesWeighting, personalSkillsWeighting)
         return rslts
     except Exception as e:
         # Log the exception or handle it in an appropriate way
@@ -324,8 +268,10 @@ def episodes_search():
     try:
         personalSkills = request.args.get("personalSkills")
         personalValues = request.args.get("personalValues")
+        personalValuesWeighting = float(request.args.get("personalValuesWeighting"))
+        personalSkillsWeighting = float(request.args.get("personalSkillsWeighting"))
         # print(personalSkills, personalValues)
-        return json_search(personalValues, personalSkills)
+        return json_search(personalValues, personalSkills, personalValuesWeighting, personalSkillsWeighting)
     except Exception as e:
         # Log the exception or handle it in an appropriate way
         print("An error occurred during search:", e)

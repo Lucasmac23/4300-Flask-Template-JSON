@@ -257,21 +257,6 @@ h4 {
 }
 
 .main_display_container {
-    /* display: flex;
-    flex-direction: column;
-    width: 90%;
-    overflow: hidden;
-    --topMargin: 60px;
-    margin-top: var(--topMargin);
-    position: relative;
-    height:calc(100vh - (var(--topMargin) * 2));
-    min-height:calc(100vh - (var(--topMargin) * 2));
-
-    border-radius: 30px;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-    background: white;
-    align-items: center; */
-
     display: flex;
     flex-direction: column;
     width: 90%;
@@ -279,14 +264,25 @@ h4 {
     --topMargin: 60px;
     margin-top: var(--topMargin);
     position: relative;
-    --height: 75vh;
-    height: calc(var(--height) - (var(--topMargin) * 2));
-    min-height: calc(var(--height) - (var(--topMargin) * 2));
+    /* --height: 75vh; */
+    height: fit-content;
+    min-height: fit-content;
     /* padding: 20px; */
     border-radius: 30px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     background: white;
     align-items: center;
+}
+
+.rangeInputSliderContainer {
+    width: calc(100% - 35px);
+}
+
+.rangeInputSliderContainer .sliderDescrips {
+    display: flex;
+    justify-content: space-between;
+    padding-inline: 5px;
+    color: #0000005c;
 }
 
 .reviews {
@@ -353,10 +349,13 @@ h4 {
     font-weight: 500;
     transition: all 0.5s ease;
     margin-bottom: 20px;
+    margin-top: 55px;
 
-    /* Revert */
-    margin-top: 60px;
+}
 
+.rangeInputSlider {
+    margin-top: 50px;
+    width: 100%;
 }
 
 .formAndSearchContainer {
