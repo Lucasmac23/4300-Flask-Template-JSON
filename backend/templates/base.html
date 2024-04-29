@@ -180,8 +180,17 @@
                     industryTitleContainer.classList.add('industryTitle');
                     let simScoreDiv = document.createElement("div");
                     simScoreDiv.classList.add('simScore');
+                    const getSimScoreCategory = (score) => {
+                        if (score > 0.55) {
+                            return 'High'
+                        } else if (score > 0.4) {
+                            return 'Medium'
+                        } else {
+                            return 'Low'
+                        }
+                    }
 
-                    simScoreDiv.innerHTML = `<div class="simScoreTitle"> Similarity Score: </div> <div class='weightedScore'>${weighted_score.toFixed(3)}</div>`
+                    simScoreDiv.innerHTML = `<div class="simScoreTitle"> ${getSimScoreCategory(weighted_score)} Similarity: </div> <div class='weightedScore'>${weighted_score.toFixed(3)}</div>`
 
                     industryTitleContainer.innerHTML = '<div class="industryPathTitle">Matched Industry Path: </div>' + industry
                     document.getElementById(industry).appendChild(industryTitleContainer)
