@@ -489,9 +489,13 @@ h4 {
     padding-bottom: 15px;
 }
 
-.svdResult .simScore {
-    font-size: 15px;
+.simScore {
+    font-size: 12px;
     padding-bottom: 15px;
+    top: 40px;
+    position: absolute;
+    opacity: 0.75;
+    left: 40px;
 }
 
 .svdResult {

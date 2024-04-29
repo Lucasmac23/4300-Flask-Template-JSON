@@ -177,12 +177,17 @@
                     //Generating the industry title section
                     let industryTitleContainer = document.createElement("div")
                     let industryContainer = document.getElementById(industry)
-                    industryTitleContainer.classList.add('industryTitle')
+                    industryTitleContainer.classList.add('industryTitle');
+                    let simScoreDiv = document.createElement("div");
+                    simScoreDiv.classList.add('simScore');
+
+                    simScoreDiv.innerHTML = `<div class="simScoreTitle"> Similarity Score: </div> <div class='weightedScore'>${weighted_score.toFixed(3)}</div>`
 
                     industryTitleContainer.innerHTML = '<div class="industryPathTitle">Matched Industry Path: </div>' + industry
                     document.getElementById(industry).appendChild(industryTitleContainer)
                     industryTitleContainer.style.cursor = 'pointer'
-                    industryContainer.classList.add('minimized')
+                    industryContainer.classList.add('minimized');
+                    industryTitleContainer.appendChild(simScoreDiv);
                     const caretHandler = () => {
                         for (let child of industryTitleContainer.children) {
                             if (child.classList.contains('caretContainer')) {
