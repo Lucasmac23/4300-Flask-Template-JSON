@@ -186,8 +186,8 @@ def executeQuerySearch(personalValues_query, personalExperience_query, personalV
         # companies_grouped_by_industry_results = dict(companies_grouped_by_industry_results)
 
         combinedScores = []
-        company_weight = personalValuesWeighting
-        industry_weight = personalSkillsWeighting
+        industry_weight = personalValuesWeighting
+        company_weight = personalSkillsWeighting
         # Print the grouped results
         for  industry, industry_simScore in industry_results:
             companies = companies_grouped_by_industry_results.get(industry)
